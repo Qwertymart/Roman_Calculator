@@ -29,7 +29,7 @@ func Tokenize(str string) ([]Token, error) {
 		switch {
 		case isRoman(c):
 			start := i
-			for i < len(str) && isRoman(c) {
+			for i < len(str) && isRoman(str[i]) {
 				i++
 			}
 			romanStr := str[start:i]
@@ -38,25 +38,30 @@ func Tokenize(str string) ([]Token, error) {
 				Type:  Number,
 				Value: romanStr,
 			})
+
 		case c == '+' || c == '-' || c == '*' || c == '/':
 			tokens = append(tokens, Token{
 				Type:  Operator,
-				Value: string(c)})
+				Value: string(c),
+			})
+			i++
+
 		case c == '(':
 			tokens = append(tokens, Token{
 				Type:  Left,
 				Value: string(c),
 			})
+			i++
 
 		case c == ')':
 			tokens = append(tokens, Token{
 				Type:  Right,
 				Value: string(c),
 			})
+			i++
 
 		default:
 			return nil, fmt.Errorf("unexpected character: %c", c)
-
 		}
 	}
 	return tokens, nil

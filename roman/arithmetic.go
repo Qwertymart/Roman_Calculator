@@ -14,7 +14,7 @@ func (n *Numeral) Add(other *Numeral) (*Numeral, error) {
 func (n *Numeral) Subtract(other *Numeral) (*Numeral, error) {
 	diff := n.Value - other.Value
 	if diff <= 0 {
-		return nil, fmt.Errorf("result out of range (≤ 0)")
+		return nil, fmt.Errorf("result out of range")
 	}
 	romanStr, err := ToRoman(diff)
 	if err != nil {

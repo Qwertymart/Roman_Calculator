@@ -1,21 +1,51 @@
 package main
 
 import (
-  "fmt"
+	"bufio"
+	"fmt"
+	"github.com/Qwertymart/Roman_Calculator/evaluation"
+	"os"
+	"strings"
 )
 
-//TIP <p>To run your code, right-click the code and select <b>Run</b>.</p> <p>Alternatively, click
-// the <icon src="AllIcons.Actions.Execute"/> icon in the gutter and select the <b>Run</b> menu item from here.</p>
-
 func main() {
-  //TIP <p>Press <shortcut actionId="ShowIntentionActions"/> when your caret is at the underlined text
-  // to see how GoLand suggests fixing the warning.</p><p>Alternatively, if available, click the lightbulb to view possible fixes.</p>
-  s := "gopher"
-  fmt.Println("Hello and welcome, %s!", s)
+	tests := []string{
+		"IX + I",         // 9 + 1 = 10 => X
+		"X - III",        // 10 - 3 = 7 => VII
+		"VI * II",        // 6 * 2 = 12 => XII
+		"XII / III",      // 12 / 3 = 4 => IV
+		"(X + II) * II",  // (10 + 2) * 2 = 24 => XXIV
+		"X + (VI / III)", // 10 + (6 / 3) = 12 => XII
+		"X / (V - V)",    // ошибка
+		"IV + BAD",       // недопустимый символ => ошибка
+	}
 
-  for i := 1; i <= 5; i++ {
-	//TIP <p>To start your debugging session, right-click your code in the editor and select the Debug option.</p> <p>We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-	// for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.</p>
-	fmt.Println("i =", 100/i)
-  }
+	for _, expr := range tests {
+		fmt.Printf("Evaluating: %s\n", expr)
+		result, err := evaluation.Evaluate(expr)
+		if err != nil {
+			fmt.Printf("Error: %v\n", err)
+		} else {
+			fmt.Printf("Result: %s (%d)", result.Roman, result.Value)
+		}
+		fmt.Println("----------------------------")
+	}
+
+	scanner := bufio.NewScanner(os.Stdin)
+	for {
+		fmt.Println("Enter your expression (or type 'exit' to quit):")
+		if !scanner.Scan() {
+			break // EOF
+		}
+		userInput := strings.TrimSpace(scanner.Text())
+		if userInput == "exit" {
+			break
+		}
+		result, err := evaluation.Evaluate(userInput)
+		if err != nil {
+			fmt.Printf("Error: %v\n", err)
+		} else {
+			fmt.Printf("Result: %s (%d)\n", result.Roman, result.Value)
+		}
+	}
 }

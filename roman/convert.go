@@ -20,7 +20,7 @@ func FromRoman(s string) (int, error) {
 				continue
 			}
 		}
-		if val, ok := romanToInt[s[i:i+2]]; ok {
+		if val, ok := romanToInt[string(s[i])]; ok {
 			result += val
 			i++
 		} else {
